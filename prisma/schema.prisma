@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Product {
+  id       Int    @id @default(autoincrement())
+  imageUrl String
+  describe String
+  title    String
+}
+
+model Recycle {
+  id           Int    @id @default(autoincrement())
+  user_id      String
+  plastic      Float
+  aluminumCans Float
+  envelope     Float
+  uht          Float
+  glass        Float
+  cardboard    Float
+  otherPaper   Float
+}
