@@ -17,7 +17,6 @@ model Product {
 
 model Recycle {
   id           Int    @id @default(autoincrement())
-  user_id      String
   plastic      Float
   aluminumCans Float
   envelope     Float
@@ -25,4 +24,5 @@ model Recycle {
   glass        Float
   cardboard    Float
   otherPaper   Float
+  user_id      String
 }
