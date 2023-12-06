@@ -5,7 +5,6 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 app.use(cors())
-const port = 3004
 
 interface Recycle {
     id: number;
@@ -54,6 +53,6 @@ app.get('/getProduct', async (req: Request, res: Response) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+app.listen(process.env.PORT, () => {
+    console.log('Example app listening on port', process.env.PORT);
 })
