@@ -9,21 +9,28 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Product {
-  id       Int    @id @default(autoincrement())
-  imageUrl String
-  describe String
-  title    String
+model Building {
+  id          Int          @id @default(autoincrement())
+  name        String
+  Restaurant  Restaurant[]
 }
 
-model Recycle {
-  id           Int    @id @default(autoincrement())
-  plastic      Float
-  aluminumCans Float
-  envelope     Float
-  uht          Float
-  glass        Float
-  cardboard    Float
-  otherPaper   Float
-  user_id      String
+model Restaurant {
+  id         Int     @id @default(autoincrement())
+  name       String
+  Buildingid Int
+  Building   Building @relation(fields: [Buildingid], references: [id])
+  Billid     Int
+  Bill       Bill[]
+}
+
+model Bill {
+  id            Int        @id @default(autoincrement())
+  Date   DateTime 
+  start         Int
+  end           Int
+  Restaurantid  Int
+  mea           Float
+  sch           Float 
+  Restaurant    Restaurant @relation(fields: [Restaurantid], references: [id])
 }
