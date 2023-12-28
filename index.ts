@@ -116,6 +116,25 @@ app.get('/totalyearlybill', async (req: Request, res: Response) => {
     
     res.json(groupedYearlybill);
 });
+
+
+app.post('/updaterestaurant', async (req: Request, res: Response) => {
+    const { id, name} = req.body;
+    try {
+      const updateRestaurant = await prisma.restaurant.update({
+        where: {
+          id: parseInt(id)
+        },
+        data: {
+          name,
+        }
+      });
+      res.status(201).json(updateRestaurant);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+    }
+  }
+);
 app.listen(process.env.PORT || 3001, () => {
     console.log('Example app listening on port', process.env.PORT);
 })
