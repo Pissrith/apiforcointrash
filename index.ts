@@ -70,7 +70,7 @@ app.post('/bill', async (req: Request, res: Response) => {
 
   interface Bill {
     id: number;
-    Date: string;
+    Date: Date;
     start: number;
     end: number;
     sch:number;
@@ -195,31 +195,21 @@ app.delete('/deletebill/:id', async (req: Request, res: Response) => {
     }
 });
 
-
-app.post('/updatebillres', async (req: Request, res: Response) => {
-    const formData = req.body;
-    console.log(formData)
-    console.log(formData.id)
+app.post('/updatebillres', async (req:Request, res:Response) => {
+    const updatedFormData = req.body;
+    console.log(updatedFormData);
     try {
-      const updateRestaurant = await prisma.restaurant.update({
-        where: {
-          id: parseInt(formData.id)
-        },
-        data: {
-            Date: formData?.Date,
-            start: formData?.start,
-            end: formData?.end,
-            mea: formData?.mea,
-            sch: formData?.sch,
-            Restaurantid:formData?.Restaurantid,
-        }
+      const updatedBill = await prisma.bill.update({
+        where: { id: updatedFormData.id },
+        data: updatedFormData,
       });
-      res.status(201).json(updateRestaurant);
+  
+      res.status(200).json({ message: 'Bill updated successfully', bill: updatedBill });
     } catch (error) {
-      res.status(500).json(error);
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred while updating the bill' });
     }
-  }
-);
+  });
 
 app.listen(process.env.PORT, () => {
     console.log('Example app listening on port', process.env.PORT);
