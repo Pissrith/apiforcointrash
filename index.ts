@@ -138,17 +138,22 @@ app.post('/updaterestaurant', async (req: Request, res: Response) => {
 app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
     const {id} = req.params;
     try {
-      const updateRestaurant = await prisma.Bill.findMany({
-        where: {
-            Restaurantid: parseInt(id)
-        }
-      });
-      res.status(201).json(updateRestaurant);
+        const bills = await prisma.Bill.findMany({
+            where: {
+                Restaurantid: parseInt(id)
+            }
+        });
+
+        const updatedBills = bills.map(bill => ({
+            ...bill,
+            Date: new Date(bill.Date).toLocaleDateString('en-GB')
+        }));
+
+        res.status(201).json(updatedBills);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+        res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
     }
-  }
-);
+});
 app.get('/allbillrestaurant/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
     const yearlybill = await prisma.Bill.findMany({
