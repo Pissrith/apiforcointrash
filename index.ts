@@ -135,6 +135,52 @@ app.post('/updaterestaurant', async (req: Request, res: Response) => {
     }
   }
 );
-app.listen(process.env.PORT || 3001, () => {
+app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
+    const {id} = req.body;
+    try {
+      const updateRestaurant = await prisma.Bill.findMany({
+        where: {
+            Restaurantid: parseInt(id)
+        }
+      });
+      res.status(201).json(updateRestaurant);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+    }
+  }
+);
+app.post('/getbillbill/:id', async (req: Request, res: Response) => {
+    const { id, sch,start,end,mea} = req.body;
+    try {
+      const updateBill = await prisma.Bill.update({
+        where: {
+          id: parseInt(id)
+        },
+        data: {
+          start,end,sch,mea
+        }
+      });
+      res.status(201).json(updateBill);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+    }
+  }
+);
+app.delete('/deletebill/:id', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const deleteBill = await prisma.Bill.delete({
+            where: {
+                id: parseInt(id),
+            },
+        });
+        res.status(200).json({ message: 'Bill deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while deleting the bill.' });
+    }
+});
+
+
+app.listen(process.env.PORT , () => {
     console.log('Example app listening on port', process.env.PORT);
 })
