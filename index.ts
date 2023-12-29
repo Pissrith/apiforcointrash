@@ -221,6 +221,6 @@ app.post('/updatebillres', async (req: Request, res: Response) => {
   }
 );
 
-app.listen(process.env.PORT||3010 , () => {
+app.listen(process.env.PORT, () => {
     console.log('Example app listening on port', process.env.PORT);
 })
