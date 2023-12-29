@@ -196,7 +196,7 @@ app.delete('/deletebill/:id', async (req: Request, res: Response) => {
 });
 
 
-app.post('/updaterestaurant', async (req: Request, res: Response) => {
+app.post('/updatebillres', async (req: Request, res: Response) => {
     const formData = req.body;
     try {
       const updateRestaurant = await prisma.restaurant.update({
