@@ -70,7 +70,7 @@ app.post('/bill', async (req: Request, res: Response) => {
 
   interface Bill {
     id: number;
-    Date: Date;
+    Date: string;
     start: number;
     end: number;
     sch:number;
@@ -216,7 +216,7 @@ app.post('/updatebillres', async (req: Request, res: Response) => {
       });
       res.status(201).json(updateRestaurant);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+      res.status(500).json(error);
     }
   }
 );
