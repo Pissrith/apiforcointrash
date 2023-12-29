@@ -196,6 +196,29 @@ app.delete('/deletebill/:id', async (req: Request, res: Response) => {
 });
 
 
+app.post('/updaterestaurant', async (req: Request, res: Response) => {
+    const formData = req.body;
+    try {
+      const updateRestaurant = await prisma.restaurant.update({
+        where: {
+          id: parseInt(formData.id)
+        },
+        data: {
+            Date: formData?.Date,
+            start: formData?.start,
+            end: formData?.end,
+            mea: formData?.mea,
+            sch: formData?.sch,
+            Restaurantid:formData?.Restaurantid,
+        }
+      });
+      res.status(201).json(updateRestaurant);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+    }
+  }
+);
+
 app.listen(process.env.PORT , () => {
     console.log('Example app listening on port', process.env.PORT);
 })
