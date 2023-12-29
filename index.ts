@@ -144,7 +144,7 @@ app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
             }
         });
 
-        const updatedBills = bills.map(bill => ({
+        const updatedBills = bills.map((bill:Bill) => ({
             ...bill,
             Date: new Date(bill.Date).toLocaleDateString('en-GB')
         }));
