@@ -6,21 +6,21 @@ const cors = require('cors')
 const app = express()
 app.use(cors())
 require('dotenv').config()
-app.use(express.json());
+app.use(express.json()); 
 
 app.get('/building', async (req: Request, res: Response) => {
     const building = await prisma.building.findMany(
         {
             include: {
                 Restaurant: {
-                    include: {
-                        Bill: true,
-                    }
+                include: {
+                    Bill: true,
                 }
             }
         }
+        }
     )
-    res.json({ building })
+    res.json({building})
 })
 
 app.get('/building/restaurant', async (req: Request, res: Response) => {
@@ -30,10 +30,10 @@ app.get('/building/restaurant', async (req: Request, res: Response) => {
             include: {
                 Bill: true
             }
-        }
-
+        }   
+    
     )
-    res.json({ building })
+    res.json({building})
 })
 
 app.get('/building/restaurant/:id', async (req: Request, res: Response) => {
@@ -42,42 +42,42 @@ app.get('/building/restaurant/:id', async (req: Request, res: Response) => {
         {
             where: {
                 id: parseInt(id)
-            }, include: {
+            },include: {
                 Bill: true
             }
-        }
-
+        }   
+    
     )
-    res.json({ restaurant: Bill })
+    res.json({restaurant: Bill})
 })
 
 app.post('/bill', async (req: Request, res: Response) => {
-    const { Restaurantid, Date, start, end, mea, sch } = req.body;
+    const { Restaurantid, Date, start, end ,mea,sch} = req.body;
     try {
-        const newBill = await prisma.Bill.create({
-            data: {
-                Restaurantid,
-                Date,
-                start,
-                end, mea, sch
-            }
-        });
-        res.status(201).json(newBill);
+      const newBill = await prisma.Bill.create({
+        data: {
+          Restaurantid,
+          Date,
+          start,
+          end,mea,sch
+        }
+      });
+      res.status(201).json(newBill);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while creating the bill.' });
+      res.status(500).json({ error: 'An error occurred while creating the bill.' });
     }
-});
+  });
 
-interface Bill {
+  interface Bill {
     id: number;
     Date: Date;
     start: number;
     end: number;
-    sch: number;
-    mea: number;
+    sch:number;
+    mea:number;
     Restaurantid: number;
-}
-app.get('/yearlybill/:id', async (req: Request, res: Response) => {
+  }
+  app.get('/yearlybill/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
     const yearlybill = await prisma.Bill.findMany({
         where: {
@@ -85,12 +85,12 @@ app.get('/yearlybill/:id', async (req: Request, res: Response) => {
         }
     });
 
-    const transformedYearlybill = yearlybill.map((bill: Bill) => ({
-
+    const transformedYearlybill = yearlybill.map((bill:Bill) => ({
+        
         ...bill,
         Date: new Date(bill.Date).toLocaleString('en-GB', { month: 'short', year: '2-digit' }),
         คิดตามหน่วยโรงเรียน: (bill.sch * (bill.end - bill.start)).toFixed(2),
-        คิดหน่วยการไฟฟ้า: ((bill.end - bill.start) * bill.mea).toFixed(2),
+        คิดหน่วยการไฟฟ้า: ((bill.end - bill.start) * bill.mea).toFixed(2) ,
     }));
 
     res.json(transformedYearlybill);
@@ -113,30 +113,30 @@ app.get('/totalyearlybill', async (req: Request, res: Response) => {
         }
         return acc;
     }, []);
-
+    
     res.json(groupedYearlybill);
 });
 
 
 app.post('/updaterestaurant', async (req: Request, res: Response) => {
-    const { id, name } = req.body;
+    const { id, name} = req.body;
     try {
-        const updateRestaurant = await prisma.restaurant.update({
-            where: {
-                id: parseInt(id)
-            },
-            data: {
-                name,
-            }
-        });
-        res.status(201).json(updateRestaurant);
+      const updateRestaurant = await prisma.restaurant.update({
+        where: {
+          id: parseInt(id)
+        },
+        data: {
+          name,
+        }
+      });
+      res.status(201).json(updateRestaurant);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
     }
-}
+  }
 );
 app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const {id} = req.params;
     try {
         const bills = await prisma.Bill.findMany({
             where: {
@@ -144,7 +144,7 @@ app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
             }
         });
 
-        const updatedBills = bills.map((bill: Bill) => ({
+        const updatedBills = bills.map((bill:Bill) => ({
             ...bill,
             Date: new Date(bill.Date).toLocaleDateString('en-GB')
         }));
@@ -163,7 +163,24 @@ app.get('/allbillrestaurant/:id', async (req: Request, res: Response) => {
     });
     return yearlybill;
 });
-
+app.post('/getbillbill/:id', async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const formData = req.body;
+        try {
+      const updateBill = await prisma.Bill.update({
+        where: {
+          id: parseInt(id)
+        },
+        data: {
+            formData
+        }
+      });
+      res.status(201).json(updateBill);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+);
 app.delete('/deletebill/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
@@ -178,29 +195,21 @@ app.delete('/deletebill/:id', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/updatebillres', async (req: Request, res: Response) => {
-    const updatedFormData = req.body;
+app.post('/updatebillres', async (req:Request, res:Response) => {
+    const updatedFormData:Bill = req.body;
     console.log(updatedFormData);
     try {
-        const updatedBill = await prisma.bill.update({
-            where: { id: updatedFormData.id },
-            data: {
-                id: parseInt(updatedFormData.id),
-                Date: updatedFormData.Date,
-                start: parseFloat(updatedFormData.start),
-                end: parseFloat(updatedFormData.end),
-                mea: parseFloat(updatedFormData.mea),
-                sch: parseFloat(updatedFormData.sch),
-                Restaurantid: parseInt(updatedFormData.Restaurantid),
-            },
-        });
-
-        res.status(200).json({ message: 'Bill updated successfully', bill: updatedBill });
+      const updatedBill = await prisma.bill.update({
+        where: { id: updatedFormData.id },
+        data: updatedFormData,
+      });
+  
+      res.status(200).json({ message: 'Bill updated successfully', bill: updatedBill });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'An error occurred while updating the bill' });
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred while updating the bill' });
     }
-});
+  });
 
 app.listen(process.env.PORT, () => {
     console.log('Example app listening on port', process.env.PORT);
