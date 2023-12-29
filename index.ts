@@ -198,6 +198,8 @@ app.delete('/deletebill/:id', async (req: Request, res: Response) => {
 
 app.post('/updatebillres', async (req: Request, res: Response) => {
     const formData = req.body;
+    console.log(formData)
+    console.log(formData.id)
     try {
       const updateRestaurant = await prisma.restaurant.update({
         where: {
@@ -219,6 +221,6 @@ app.post('/updatebillres', async (req: Request, res: Response) => {
   }
 );
 
-app.listen(process.env.PORT , () => {
+app.listen(process.env.PORT||3010 , () => {
     console.log('Example app listening on port', process.env.PORT);
 })
