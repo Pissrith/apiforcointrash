@@ -177,7 +177,7 @@ app.post('/getbillbill/:id', async (req: Request, res: Response) => {
       });
       res.status(201).json(updateBill);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while updating the restaurant.' });
+      res.status(500).json({ error });
     }
   }
 );
