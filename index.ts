@@ -136,7 +136,7 @@ app.post('/updaterestaurant', async (req: Request, res: Response) => {
   }
 );
 app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
-    const {id} = req.body;
+    const {id} = req.params;
     try {
       const updateRestaurant = await prisma.Bill.findMany({
         where: {
@@ -149,6 +149,15 @@ app.get('/getbillrestaurant/:id', async (req: Request, res: Response) => {
     }
   }
 );
+app.get('/allbillrestaurant/:id', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const yearlybill = await prisma.Bill.findMany({
+        where: {
+            Restaurantid: parseInt(id)
+        }
+    });
+    return yearlybill;
+});
 app.post('/getbillbill/:id', async (req: Request, res: Response) => {
     const { id, sch,start,end,mea} = req.body;
     try {
