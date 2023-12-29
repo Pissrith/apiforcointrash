@@ -164,14 +164,15 @@ app.get('/allbillrestaurant/:id', async (req: Request, res: Response) => {
     return yearlybill;
 });
 app.post('/getbillbill/:id', async (req: Request, res: Response) => {
-    const { id, sch,start,end,mea,date} = req.body;
-    try {
+    const id = req.params.id;
+    const formData = req.body;
+        try {
       const updateBill = await prisma.Bill.update({
         where: {
           id: parseInt(id)
         },
         data: {
-          start,end,sch,mea,date
+            formData
         }
       });
       res.status(201).json(updateBill);
